@@ -11,7 +11,7 @@ on:
 jobs:
   build:
 
-    name: Build, Test & Coverage
+    name: Build, Test, Coverage & SonarQube
 
     runs-on: self-hosted
 
@@ -19,6 +19,9 @@ jobs:
       DB_URL: ${{ secrets.DB_URL }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
 
@@ -31,7 +34,6 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      # Windows-compatible Gradle cache
       - name: Cache Gradle Dependencies
         uses: actions/cache@v4
         with:
@@ -46,16 +48,14 @@ jobs:
         if: runner.os != 'Windows'
         run: chmod +x gradlew
 
-      - name: Build Project
+      - name: Build, Test, Generate Coverage & Sonar Analysis
         shell: powershell
-        run: .\gradlew.bat clean build
-
-      - name: Generate JaCoCo Report
-        shell: powershell
-        run: .\gradlew.bat jacocoTestReport
+        run: |
+          .\gradlew.bat clean build jacocoTestReport sonar
 
       - name: Upload JaCoCo Report
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: build/reports/jacoco/test/html
+          path: build/reports/jacoco
+          retention-days: 7
