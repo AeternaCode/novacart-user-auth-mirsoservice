@@ -40,22 +40,24 @@ tasks.named('test') {
     finalizedBy jacocoTestReport
 }
 
-Properties localProps = new Properties()
-def localPropsFile = file("gradle-local.properties")
-
-if (localPropsFile.exists()) {
-    localProps.load(localPropsFile.newDataInputStream())
-}
-
 sonar {
     properties {
+
         property "sonar.projectKey", "user-auth-service"
         property "sonar.projectName", "User Auth Service"
-        property "sonar.host.url", "http://localhost:9000"
-        property "sonar.token",  localProps.getProperty("sonar.token")
-        property "sonar.coverage.jacoco.xmlReportPaths",
-                layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml").get().asFile.absolutePath
 
+        property "sonar.host.url",
+                findProperty("sonar.host.url")
+
+        property "sonar.token",
+                findProperty("sonar.token")
+
+        property "sonar.coverage.jacoco.xmlReportPaths",
+                layout.buildDirectory
+                        .file("reports/jacoco/test/jacocoTestReport.xml")
+                        .get()
+                        .asFile
+                        .absolutePath
     }
 }
 
