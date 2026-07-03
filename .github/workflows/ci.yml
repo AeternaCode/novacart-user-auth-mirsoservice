@@ -11,7 +11,7 @@ on:
 jobs:
   build:
 
-    name: Build Project
+    name: Build, Test & Coverage
 
     runs-on: self-hosted
 
@@ -31,12 +31,13 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Cache Gradle
+      # Windows-compatible Gradle cache
+      - name: Cache Gradle Dependencies
         uses: actions/cache@v4
         with:
           path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
+            C:\Users\${{ env.USERNAME }}\.gradle\caches
+            C:\Users\${{ env.USERNAME }}\.gradle\wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             gradle-${{ runner.os }}-
@@ -48,3 +49,13 @@ jobs:
       - name: Build Project
         shell: powershell
         run: .\gradlew.bat clean build
+
+      - name: Generate JaCoCo Report
+        shell: powershell
+        run: .\gradlew.bat jacocoTestReport
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html
