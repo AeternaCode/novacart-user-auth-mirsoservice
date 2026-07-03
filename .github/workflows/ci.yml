@@ -46,5 +46,5 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Project
-        shell: pwsh
-        run: ./gradlew.bat clean build
+        shell: powershell
+        run: .\gradlew.bat clean build
