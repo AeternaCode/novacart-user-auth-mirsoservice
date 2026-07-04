@@ -48,10 +48,17 @@ jobs:
         if: runner.os != 'Windows'
         run: chmod +x gradlew
 
-      - name: Build, Test, Generate Coverage & Sonar Analysis
+      - name: Build Project
         shell: powershell
-        run: |
-          .\gradlew.bat clean build jacocoTestReport sonar
+        run: .\gradlew.bat clean build
+
+      - name: Generate JaCoCo Report
+        shell: powershell
+        run: .\gradlew.bat jacocoTestReport
+
+      - name: Run SonarQube Analysis
+        shell: powershell
+        run: .\gradlew.bat sonar
 
       - name: Upload JaCoCo Report
         uses: actions/upload-artifact@v4
