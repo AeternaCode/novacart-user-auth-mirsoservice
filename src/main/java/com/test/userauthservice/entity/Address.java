@@ -43,4 +43,8 @@ public class Address extends AuditableEntity {
 
     @Column(name = "postal_code", nullable = false, length = 20)
     private String postalCode;
+
+    @Column(name = "is_default", nullable = false)
+    @Builder.Default
+    private Boolean isDefault = false;
 }
