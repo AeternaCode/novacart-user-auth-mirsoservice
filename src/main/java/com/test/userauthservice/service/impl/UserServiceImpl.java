@@ -168,17 +168,7 @@ public class UserServiceImpl implements IUsers {
         Users user = verifyResource.verifyOrGetUserById(userId);
         log.info("Updating user with id {}", userId);
 
-        if (updateUserRequestDTO.firstName() != null && !updateUserRequestDTO.firstName().isBlank())
-            user.setFirstName(updateUserRequestDTO.firstName());
-
-        if (updateUserRequestDTO.lastName() != null && !updateUserRequestDTO.lastName().isBlank())
-            user.setLastName(updateUserRequestDTO.lastName());
-
-        if (updateUserRequestDTO.phoneNumber() != null && !updateUserRequestDTO.phoneNumber().isBlank())
-            user.setPhoneNumber(updateUserRequestDTO.phoneNumber());
-
-        if (updateUserRequestDTO.profileImageUrl() != null && !updateUserRequestDTO.profileImageUrl().isBlank())
-            user.setProfileImageUrl(updateUserRequestDTO.profileImageUrl());
+        user = UserMapper.updateUserFromDTO(updateUserRequestDTO, user);
 
         usersRepo.save(user);
         log.info("User updated successfully. UserId={}", user.getId());

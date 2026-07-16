@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/user/{userId}/address")
+@RequestMapping("api/v1/user/{userId}/addresses")
 @RequiredArgsConstructor
 @Validated
 @Tag(
@@ -79,7 +79,7 @@ public class AddressController {
             summary = "Update address",
             description = "Updates an existing address"
     )
-    @PutMapping("/{addressId}")
+    @PatchMapping("/{addressId}")
     public ResponseEntity<ApiResponse<GetAddressResponseDTO>> updateAddress(
             @PathVariable
             @Positive(message = "User ID must be greater than 0")
