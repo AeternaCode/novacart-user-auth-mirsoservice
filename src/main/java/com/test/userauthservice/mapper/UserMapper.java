@@ -1,5 +1,6 @@
 package com.test.userauthservice.mapper;
 
+import com.test.userauthservice.dto.request.user.UpdateUserRequestDTO;
 import com.test.userauthservice.dto.response.PageResponse;
 import com.test.userauthservice.dto.response.user.GetDeletedUserResponseDTO;
 import com.test.userauthservice.dto.response.user.GetUserResponseDTO;
@@ -84,6 +85,29 @@ public class UserMapper {
         return mapGetDeletedUserResponseDTO(user);
     }
 
+    public static Users updateUserFromDTO(UpdateUserRequestDTO updateUserRequestDTO, Users user) {
+        if (updateUserRequestDTO == null || user == null) {
+            return user;
+        }
+
+        if (updateUserRequestDTO.firstName() != null && !updateUserRequestDTO.firstName().isBlank()) {
+            user.setFirstName(updateUserRequestDTO.firstName());
+        }
+
+        if (updateUserRequestDTO.lastName() != null && !updateUserRequestDTO.lastName().isBlank()) {
+            user.setLastName(updateUserRequestDTO.lastName());
+        }
+
+        if (updateUserRequestDTO.phoneNumber() != null && !updateUserRequestDTO.phoneNumber().isBlank()) {
+            user.setPhoneNumber(updateUserRequestDTO.phoneNumber());
+        }
+
+        if (updateUserRequestDTO.profileImageUrl() != null && !updateUserRequestDTO.profileImageUrl().isBlank()) {
+            user.setProfileImageUrl(updateUserRequestDTO.profileImageUrl());
+        }
+
+        return user;
+    }
 
     public static <T> PageResponse<T> toPageResponse(List<T> content, Page<?> page) {
         return PageResponse.<T>builder()
