@@ -1,57 +1,114 @@
 package com.test.userauthservice.controller;
 
-import com.test.userauthservice.service.IAddresses;
+import com.test.userauthservice.service.impl.AddressesServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.test.userauthservice.dto.ApiResponse;
+import com.test.userauthservice.dto.request.address.CreateAddressRequestDTO;
+import com.test.userauthservice.dto.request.address.UpdateAddressRequestDTO;
+import com.test.userauthservice.dto.response.address.GetAddressResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/user/{id}/address")
+@RequestMapping("api/v1/user/{userId}/addresses")
 @RequiredArgsConstructor
+@Validated
+@Tag(
+        name = "Address Management",
+        description = "APIs for managing user addresses"
+)
+
 public class AddressController {
-    private final IAddresses addressesService;
+    private final AddressesServiceImpl addressesService;
 
-    @GetMapping
-    public ResponseEntity<?> getAllAddresses(
-            @PathVariable Long userId,
-            @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection) {
-
-        return ResponseEntity.ok().build();
-    }
-
+    @Operation(
+            summary = "Create address",
+            description = "Creates a new address for a user"
+    )
     @PostMapping
-    public ResponseEntity<?> createAddress(
-            @PathVariable Long userId,
-            @RequestBody Object request) {
+    public ResponseEntity<ApiResponse<GetAddressResponseDTO>> createAddress(
+            @PathVariable
+            @Positive(message = "User ID must be greater than 0")
+            Long userId,
 
-        return ResponseEntity.ok().build();
+            @Valid
+            @RequestBody CreateAddressRequestDTO request
+    ) {
+        return ResponseEntity.ok(addressesService.createAddress(userId, request));
     }
 
+    @Operation(
+            summary = "Get all addresses",
+            description = "Returns all addresses belonging to a user"
+    )
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<GetAddressResponseDTO>>> getAllAddresses(
+            @PathVariable
+            @Positive(message = "User ID must be greater than 0")
+            Long userId
+    ) {
+        return ResponseEntity.ok(addressesService.getAllAddresses(userId));
+    }
+
+    @Operation(
+            summary = "Get address by ID",
+            description = "Returns a specific address belonging to a user"
+    )
     @GetMapping("/{addressId}")
-    public ResponseEntity<?> getAddressById(
-            @PathVariable Long userId,
-            @PathVariable Long addressId) {
+    public ResponseEntity<ApiResponse<GetAddressResponseDTO>> getAddressById(
+            @PathVariable
+            @Positive(message = "User ID must be greater than 0")
+            Long userId,
 
-        return ResponseEntity.ok().build();
+            @PathVariable
+            @Positive(message = "Address ID must be greater than 0")
+            Long addressId
+    ) {
+        return ResponseEntity.ok(addressesService.getAddressById(userId, addressId));
     }
 
-    @PutMapping("/{addressId}")
-    public ResponseEntity<?> updateAddress(
-            @PathVariable Long userId,
-            @PathVariable Long addressId,
-            @RequestBody Object request) {
+    @Operation(
+            summary = "Update address",
+            description = "Updates an existing address"
+    )
+    @PatchMapping("/{addressId}")
+    public ResponseEntity<ApiResponse<GetAddressResponseDTO>> updateAddress(
+            @PathVariable
+            @Positive(message = "User ID must be greater than 0")
+            Long userId,
 
-        return ResponseEntity.ok().build();
+            @PathVariable
+            @Positive(message = "Address ID must be greater than 0")
+            Long addressId,
+
+            @Valid
+            @RequestBody UpdateAddressRequestDTO request
+    ) {
+        return ResponseEntity.ok(addressesService.updateAddress(userId, addressId, request));
     }
 
+    @Operation(
+            summary = "Delete address",
+            description = "Permanently deletes an address"
+    )
     @DeleteMapping("/{addressId}")
-    public ResponseEntity<?> deleteAddress(
-            @PathVariable Long userId,
-            @PathVariable Long addressId) {
+    public ResponseEntity<ApiResponse<Long>> deleteAddress(
+            @PathVariable
+            @Positive(message = "User ID must be greater than 0")
+            Long userId,
 
-        return ResponseEntity.noContent().build();
+            @PathVariable
+            @Positive(message = "Address ID must be greater than 0")
+            Long addressId
+    ) {
+        return ResponseEntity.ok(addressesService.deleteAddress(userId, addressId));
     }
 }
