@@ -18,50 +18,60 @@ public final class UserSpecification {
      *         Specification<Product> spec = (root, query, criteriaBuilder) ->
      *                 criteriaBuilder.isNull(root.get("deletedAt"));
      * */
+    private static final String FIRST_NAME = "firstName";
+    private static final String LAST_NAME = "lastName";
+    private static final String EMAIL = "email";
+    private static final String PHONE_NUMBER = "phoneNumber";
+    private static final String STATUS = "status";
+    private static final String ROLE = "role";
+    private static final String ID = "id";
+    private static final String EMAIL_VERIFIED = "emailVerified";
+    private static final String PHONE_VERIFIED = "phoneVerified";
+    private static final String DELETED_AT = "deletedAt";
 
      public static Specification<Users> isNotDeleted(){
          return ((root, query, criteriaBuilder) ->
-                 criteriaBuilder.isNull(root.get("deletedAt"))
+                 criteriaBuilder.isNull(root.get(DELETED_AT))
                  );
      }
      public static Specification<Users> isDeleted(){
          return ((root, query, criteriaBuilder) ->
-                  criteriaBuilder.isNotNull(root.get("deletedAt"))
+                  criteriaBuilder.isNotNull(root.get(DELETED_AT))
                   );
      }
      public static Specification<Users> hasKeyword(String keyword){
          String searchKeyword = "%" + keyword.toLowerCase() + "%";
          return ((root, query, criteriaBuilder) ->
                  criteriaBuilder.or(
-                         criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), searchKeyword),
-                         criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), searchKeyword),
-                         criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), searchKeyword)
+                         criteriaBuilder.like(criteriaBuilder.lower(root.get(FIRST_NAME)), searchKeyword),
+                         criteriaBuilder.like(criteriaBuilder.lower(root.get(LAST_NAME)), searchKeyword),
+                         criteriaBuilder.like(criteriaBuilder.lower(root.get(EMAIL)), searchKeyword)
                  )
          );
     }
      public static Specification<Users> hasPhoneNumber(String phoneNumber){
          return ((root, query, criteriaBuilder) ->
-                  criteriaBuilder.like(root.get("phoneNumber"), "%" + phoneNumber + "%")
+                  criteriaBuilder.like(root.get(PHONE_NUMBER), "%" + phoneNumber + "%")
                   );
      }
      public static Specification<Users> hasStatus(UserStatus status){
          return ((root, query, criteriaBuilder) ->
-                 criteriaBuilder.equal(root.get("status"), status)
+                 criteriaBuilder.equal(root.get(STATUS), status)
                  );
      }
      public static Specification<Users> hasRole(Long roleId){
          return ((root, query, criteriaBuilder) ->
-                 criteriaBuilder.equal(root.get("role").get("id"), roleId)
+                 criteriaBuilder.equal(root.get(ROLE).get(ID), roleId)
                  );
      }
      public static Specification<Users> hasEmailVerified(Boolean emailVerified){
          return ((root, query, criteriaBuilder) ->
-                 criteriaBuilder.equal(root.get("emailVerified"), emailVerified)
+                 criteriaBuilder.equal(root.get(EMAIL_VERIFIED), emailVerified)
                  );
      }
      public static Specification<Users> hasPhoneVerified(Boolean phoneVerified){
          return ((root, query, criteriaBuilder) ->
-                 criteriaBuilder.equal(root.get("phoneVerified"), phoneVerified)
+                 criteriaBuilder.equal(root.get(PHONE_VERIFIED), phoneVerified)
                  );
      }
 }
