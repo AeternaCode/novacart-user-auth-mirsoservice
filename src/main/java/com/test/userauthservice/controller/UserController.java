@@ -1,6 +1,7 @@
 package com.test.userauthservice.controller;
 
 import com.test.userauthservice.dto.ApiResponse;
+import com.test.userauthservice.dto.request.user.SearchUserRequestDTO;
 import com.test.userauthservice.dto.request.user.UpdateUserRequestDTO;
 import com.test.userauthservice.dto.response.PageResponse;
 import com.test.userauthservice.dto.response.user.GetDeletedUserResponseDTO;
@@ -36,12 +37,13 @@ public class UserController {
     )
     @GetMapping("/get-all-users")
     public ResponseEntity<ApiResponse<PageResponse<GetUserResponseDTO>>> getAllUsers(
+            @ModelAttribute SearchUserRequestDTO searchUserRequestDTO,
             @RequestParam(defaultValue = "0") @PositiveOrZero(message = "Page number cannot be negative") int pageNumber,
             @RequestParam(defaultValue = "10") @Positive(message = "Size must be greater than 0") int size,
             @RequestParam(defaultValue = "ID") UserSortField sortBy,
             @RequestParam(defaultValue = "ASC") SortDirection sortDirection
     ){
-        return ResponseEntity.ok(usersService.getAllUsers(pageNumber,size,sortBy,sortDirection));
+        return ResponseEntity.ok(usersService.getAllUsers(searchUserRequestDTO,pageNumber,size,sortBy,sortDirection));
     }
 
     @Operation(
@@ -94,12 +96,13 @@ public class UserController {
     )
     @GetMapping("/get-deleted-users")
     public ResponseEntity<ApiResponse<PageResponse<GetDeletedUserResponseDTO>>> getDeletedUsers(
+            @ModelAttribute SearchUserRequestDTO searchUserRequestDTO,
             @RequestParam(defaultValue = "0") @PositiveOrZero(message = "Page number cannot be negative") int pageNumber,
             @RequestParam(defaultValue = "10") @Positive(message = "Size must be greater than 0") int size,
             @RequestParam(defaultValue = "ID") UserSortField sortBy,
             @RequestParam(defaultValue = "ASC") SortDirection sortDirection
     ) {
-        return ResponseEntity.ok(usersService.getDeletedUsers(pageNumber, size, sortBy, sortDirection));
+        return ResponseEntity.ok(usersService.getDeletedUsers(searchUserRequestDTO,pageNumber, size, sortBy, sortDirection));
     }
 
     @Operation(
@@ -117,7 +120,7 @@ public class UserController {
             summary = "Update user",
             description = "Updates an existing user using the user ID"
     )
-    @PutMapping("/update-user-by-id/{userId}")
+    @PatchMapping("/update-user-by-id/{userId}")
     public ResponseEntity<ApiResponse<GetUserResponseDTO>> updateUser(
             @PathVariable @Positive(message = "User ID must be greater than 0") Long userId,
             @Valid @RequestBody UpdateUserRequestDTO updateUserRequestDTO
