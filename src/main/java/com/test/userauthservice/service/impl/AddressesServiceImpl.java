@@ -22,7 +22,6 @@ import java.util.List;
 @Slf4j
 public class AddressesServiceImpl implements IAddresses {
     private final AddressesRepo addressesRepo;
-    private final AddressMapper addressMapper;
     private final VerifyResource verifyResource;
 
     @Override
@@ -31,14 +30,14 @@ public class AddressesServiceImpl implements IAddresses {
         Users user = verifyResource.verifyOrGetUserById(userId);
         log.info("Creating address for user: {}", userId);
 
-        Address address = addressMapper.toAddressEntity(request, user);
+        Address address = AddressMapper.toAddressEntity(request, user);
         addressesRepo.save(address);
         log.info("Address created successfully. AddressId={}", address.getId());
 
         return ApiResponse.<GetAddressResponseDTO>builder()
                 .success(true)
                 .message("Address created successfully with id : " + address.getId())
-                .data(addressMapper.toGetAddressResponseDTO(address))
+                .data(AddressMapper.toGetAddressResponseDTO(address))
                 .build();
     }
 
@@ -49,7 +48,7 @@ public class AddressesServiceImpl implements IAddresses {
         log.info("Fetching all addresses for user: {}", userId);
 
         List<Address> addresses = addressesRepo.findAllByUserId(userId);
-        List<GetAddressResponseDTO> addressDTOs = addressMapper.toGetAddressResponseDTOList(addresses);
+        List<GetAddressResponseDTO> addressDTOs = AddressMapper.toGetAddressResponseDTOList(addresses);
 
         log.info("Successfully fetched {} addresses for user: {}", addresses.size(), userId);
         return ApiResponse.<List<GetAddressResponseDTO>>builder()
@@ -69,7 +68,7 @@ public class AddressesServiceImpl implements IAddresses {
         return ApiResponse.<GetAddressResponseDTO>builder()
                 .success(true)
                 .message("Address fetched successfully with id : " + address.getId())
-                .data(addressMapper.toGetAddressResponseDTO(address))
+                .data(AddressMapper.toGetAddressResponseDTO(address))
                 .build();
     }
 
@@ -80,14 +79,14 @@ public class AddressesServiceImpl implements IAddresses {
         Address address = verifyResource.verifyOrGetAddressByIdAndUserId(addressId, userId);
 
         log.info("Updating address with id {}", addressId);
-        address = addressMapper.updateAddressFromDTO(request, address);
+        address = AddressMapper.updateAddressFromDTO(request, address);
         addressesRepo.save(address);
 
         log.info("Address updated successfully. AddressId={}", address.getId());
         return ApiResponse.<GetAddressResponseDTO>builder()
                 .success(true)
                 .message("Address updated successfully with id : " + address.getId())
-                .data(addressMapper.toGetAddressResponseDTO(address))
+                .data(AddressMapper.toGetAddressResponseDTO(address))
                 .build();
     }
 

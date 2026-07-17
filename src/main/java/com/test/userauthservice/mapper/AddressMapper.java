@@ -5,14 +5,12 @@ import com.test.userauthservice.dto.request.address.UpdateAddressRequestDTO;
 import com.test.userauthservice.dto.response.address.GetAddressResponseDTO;
 import com.test.userauthservice.entity.Address;
 import com.test.userauthservice.entity.Users;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class AddressMapper {
 
-    public GetAddressResponseDTO toGetAddressResponseDTO(Address address) {
+    public static GetAddressResponseDTO toGetAddressResponseDTO(Address address) {
         if (address == null) {
             return null;
         }
@@ -30,13 +28,13 @@ public class AddressMapper {
         );
     }
 
-    public List<GetAddressResponseDTO> toGetAddressResponseDTOList(List<Address> addresses) {
+    public static List<GetAddressResponseDTO> toGetAddressResponseDTOList(List<Address> addresses) {
         return addresses.stream()
-                .map(this::toGetAddressResponseDTO)
+                .map(AddressMapper::toGetAddressResponseDTO)
                 .toList();
     }
 
-    public Address toAddressEntity(CreateAddressRequestDTO createAddressRequestDTO, Users user) {
+    public static Address toAddressEntity(CreateAddressRequestDTO createAddressRequestDTO, Users user) {
         if (createAddressRequestDTO == null || user == null) {
             return null;
         }
@@ -53,7 +51,7 @@ public class AddressMapper {
                 .build();
     }
 
-    public Address updateAddressFromDTO(UpdateAddressRequestDTO updateAddressRequestDTO, Address address) {
+    public static Address updateAddressFromDTO(UpdateAddressRequestDTO updateAddressRequestDTO, Address address) {
         if (updateAddressRequestDTO == null || address == null) {
             return address;
         }

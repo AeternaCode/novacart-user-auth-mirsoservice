@@ -6,11 +6,9 @@ import com.test.userauthservice.dto.response.user.GetDeletedUserResponseDTO;
 import com.test.userauthservice.dto.response.user.GetUserResponseDTO;
 import com.test.userauthservice.entity.Users;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class UserMapper {
 
     private static GetUserResponseDTO mapGetUserResponseDTO(Users user) {
