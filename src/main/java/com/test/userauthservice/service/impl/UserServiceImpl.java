@@ -11,7 +11,7 @@ import com.test.userauthservice.entity.Users;
 import com.test.userauthservice.mapper.UserMapper;
 import com.test.userauthservice.repository.UserRepo;
 import com.test.userauthservice.service.IUsers;
-import com.test.userauthservice.specifications.Users.UserSpecificationBuilder;
+import com.test.userauthservice.specifications.users.UserSpecificationBuilder;
 import com.test.userauthservice.utils.ENUMS.SortDirection;
 import com.test.userauthservice.utils.ENUMS.UserSortField;
 import com.test.userauthservice.utils.VerifyResource;

@@ -1,4 +1,4 @@
-package com.test.userauthservice.specifications.Users;
+package com.test.userauthservice.specifications.users;
 
 import com.test.userauthservice.entity.Users;
 import com.test.userauthservice.utils.ENUMS.UserStatus;

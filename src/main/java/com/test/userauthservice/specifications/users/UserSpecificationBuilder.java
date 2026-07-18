@@ -1,4 +1,4 @@
-package com.test.userauthservice.specifications.Users;
+package com.test.userauthservice.specifications.users;
 
 import com.test.userauthservice.dto.request.user.SearchUserRequestDTO;
 import com.test.userauthservice.entity.Users;
