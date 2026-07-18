@@ -1,6 +1,6 @@
 package com.test.userauthservice;
 
-import com.test.userauthservice.config.PaginationProperties;
+import com.test.userauthservice.common.config.PaginationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
