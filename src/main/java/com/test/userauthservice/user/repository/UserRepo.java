@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Optional;
 
 public interface UserRepo extends JpaRepository<Users, Long>, JpaSpecificationExecutor<Users> {
+    Optional<Users> findByEmailAndDeletedAtIsNull(String email);
     Optional<Users> findByIdAndDeletedAtIsNull(Long id);
     Optional<Users> findByIdAndDeletedAtIsNotNull(Long id);
 }
