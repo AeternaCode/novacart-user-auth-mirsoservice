@@ -1,9 +1,9 @@
 package com.test.userauthservice.user.controller;
 
-import com.test.userauthservice.user.dto.ApiResponse;
+import com.test.userauthservice.common.dto.ApiResponse;
 import com.test.userauthservice.user.dto.request.user.SearchUserRequestDTO;
 import com.test.userauthservice.user.dto.request.user.UpdateUserRequestDTO;
-import com.test.userauthservice.user.dto.response.PageResponse;
+import com.test.userauthservice.common.dto.PageResponse;
 import com.test.userauthservice.user.dto.response.user.GetDeletedUserResponseDTO;
 import com.test.userauthservice.user.dto.response.user.GetUserResponseDTO;
 import com.test.userauthservice.user.service.impl.UserServiceImpl;

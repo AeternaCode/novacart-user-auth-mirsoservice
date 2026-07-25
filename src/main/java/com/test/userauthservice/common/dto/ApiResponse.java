@@ -1,4 +1,4 @@
-package com.test.userauthservice.user.dto;
+package com.test.userauthservice.common.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

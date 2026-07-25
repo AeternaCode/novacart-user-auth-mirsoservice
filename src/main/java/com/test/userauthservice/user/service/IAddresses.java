@@ -1,6 +1,6 @@
 package com.test.userauthservice.user.service;
 
-import com.test.userauthservice.user.dto.ApiResponse;
+import com.test.userauthservice.common.dto.ApiResponse;
 import com.test.userauthservice.user.dto.request.address.CreateAddressRequestDTO;
 import com.test.userauthservice.user.dto.request.address.UpdateAddressRequestDTO;
 import com.test.userauthservice.user.dto.response.address.GetAddressResponseDTO;

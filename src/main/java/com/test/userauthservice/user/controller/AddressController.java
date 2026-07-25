@@ -4,7 +4,7 @@ import com.test.userauthservice.user.service.impl.AddressesServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.test.userauthservice.user.dto.ApiResponse;
+import com.test.userauthservice.common.dto.ApiResponse;
 import com.test.userauthservice.user.dto.request.address.CreateAddressRequestDTO;
 import com.test.userauthservice.user.dto.request.address.UpdateAddressRequestDTO;
 import com.test.userauthservice.user.dto.response.address.GetAddressResponseDTO;

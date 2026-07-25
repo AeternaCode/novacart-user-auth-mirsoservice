@@ -1,7 +1,7 @@
 package com.test.userauthservice.user.mapper;
 
 import com.test.userauthservice.user.dto.request.user.UpdateUserRequestDTO;
-import com.test.userauthservice.user.dto.response.PageResponse;
+import com.test.userauthservice.common.dto.PageResponse;
 import com.test.userauthservice.user.dto.response.user.GetDeletedUserResponseDTO;
 import com.test.userauthservice.user.dto.response.user.GetUserResponseDTO;
 import com.test.userauthservice.user.entity.Users;
