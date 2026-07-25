@@ -10,4 +10,6 @@ public interface UserRepo extends JpaRepository<Users, Long>, JpaSpecificationEx
     Optional<Users> findByEmailAndDeletedAtIsNull(String email);
     Optional<Users> findByIdAndDeletedAtIsNull(Long id);
     Optional<Users> findByIdAndDeletedAtIsNotNull(Long id);
+    Boolean existsByEmail(String email);
+    Boolean existsByPhoneNumber(String phoneNumber);
 }

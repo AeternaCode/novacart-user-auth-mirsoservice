@@ -1,5 +1,6 @@
 package com.test.userauthservice.user.entity;
 
+import com.test.userauthservice.common.entity.Roles;
 import com.test.userauthservice.common.utils.ENUMS.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;

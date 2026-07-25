@@ -1,4 +1,4 @@
-package com.test.userauthservice.user.entity;
+package com.test.userauthservice.common.entity;
 
 import com.test.userauthservice.common.utils.ENUMS.RoleType;
 import jakarta.persistence.*;

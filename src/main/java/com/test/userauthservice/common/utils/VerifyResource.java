@@ -43,5 +43,15 @@ public class VerifyResource {
                         "ADDRESS_NOT_FOUND"
                 ));
     }
+
+    public boolean isEmailExists(String email) {
+        log.info("Checking if email address exists for user with email={}", email);
+        return userRepo.existsByEmail(email);
+    }
+
+    public boolean isPhoneNumberExists(String phoneNumber) {
+        log.info("Checking if phone number exists for user with phoneNumber={}", phoneNumber);
+        return userRepo.existsByPhoneNumber(phoneNumber);
+    }
 }
 
