@@ -21,7 +21,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
@@ -54,7 +53,7 @@ public class SecurityConfig {
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customUserDetailsService);
-        provider.setPasswordEncoder(passwordEncoder);
+        provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
