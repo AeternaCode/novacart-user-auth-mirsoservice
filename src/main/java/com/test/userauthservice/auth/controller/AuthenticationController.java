@@ -1,0 +1,34 @@
+package com.test.userauthservice.auth.controller;
+
+import com.test.userauthservice.auth.dto.response.AuthenticationResponse;
+import com.test.userauthservice.auth.dto.request.LoginRequest;
+import com.test.userauthservice.auth.dto.request.RegisterRequest;
+import com.test.userauthservice.auth.service.impl.AuthenticationServiceImpl;
+import com.test.userauthservice.common.dto.ApiResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
+public class AuthenticationController {
+
+    private final AuthenticationServiceImpl authenticationService;
+    private static final String TOKEN_TYPE = "Bearer";
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<AuthenticationResponse>> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        return null;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<AuthenticationResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
+        return null;
+    }
+
+}
