@@ -15,14 +15,15 @@ import com.test.userauthservice.common.utils.ENUMS.UserStatus;
 import com.test.userauthservice.common.entity.Roles;
 import com.test.userauthservice.user.entity.Users;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationServiceImpl implements IAuthentication {
 
     private final AuthenticationManager authenticationManager;
@@ -30,9 +31,11 @@ public class AuthenticationServiceImpl implements IAuthentication {
     private final PasswordEncoder passwordEncoder;
     private final JwtServiceImpl jwtService;
     private final IRoles roleRepository;
+    private static final String TOKEN_TYPE = "Bearer";
 
     @Override
     public ApiResponse<AuthenticationResponse> register(RegisterRequest registerRequest) {
+        log.info("Register request: {}", registerRequest);
         if (!registerRequest.password().equals(registerRequest.confirmPassword())) {
             throw new PasswordMismatchException("Password and confirm password do not match.", "PASSWORD_MISMATCH");
         }
@@ -50,15 +53,12 @@ public class AuthenticationServiceImpl implements IAuthentication {
 
         Users savedUser = internalUserService.createUserForAuthentication(user);
 
+        String accessToken = jwtService.generateAccessToken(savedUser);
+
+        String refreshToken = jwtService.generateRefreshToken(savedUser);
+
         return ApiResponse.<AuthenticationResponse>builder()
-                .data(new AuthenticationResponse(
-                        "Token",
-                        "token",
-                        "token",
-                        Instant.now(),
-                        Instant.now(),
-                        AuthenticationMapper.toUserSummary(savedUser)
-                ))
+                .data(buildAuthenticationResponse(savedUser, accessToken, refreshToken))
                 .message("User registered successfully.")
                 .success(true)
                 .build();
@@ -67,5 +67,16 @@ public class AuthenticationServiceImpl implements IAuthentication {
     @Override
     public ApiResponse<AuthenticationResponse> login(LoginRequest loginRequest) {
         return null;
+    }
+
+    private AuthenticationResponse buildAuthenticationResponse(Users savedUser, String accessToken, String refreshToken) {
+        return new AuthenticationResponse(
+                accessToken,
+                refreshToken,
+                TOKEN_TYPE,
+                jwtService.getTokenExpiry(accessToken),
+                jwtService.getTokenExpiry(refreshToken),
+                AuthenticationMapper.toUserSummary(savedUser)
+        );
     }
 }

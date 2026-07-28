@@ -2,6 +2,7 @@ package com.test.userauthservice.common.exception;
 
 import com.test.userauthservice.common.exception.custom_exception.DuplicateResourceException;
 import com.test.userauthservice.common.exception.custom_exception.InvalidOperationException;
+import com.test.userauthservice.common.exception.custom_exception.PasswordMismatchException;
 import com.test.userauthservice.common.exception.custom_exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -73,6 +74,26 @@ public class GlobalExceptionHandler {
                 .build();
 
         log.error("Invalid operation", ex);
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordMismatchException(
+            PasswordMismatchException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.CONFLICT)
+                .error(ex.getErrorMsg())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        log.error("Password mismatch", ex);
 
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
