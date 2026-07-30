@@ -4,6 +4,7 @@ import com.test.userauthservice.auth.dto.request.LoginRequest;
 import com.test.userauthservice.auth.dto.request.RegisterRequest;
 import com.test.userauthservice.auth.dto.response.AuthenticationResponse;
 import com.test.userauthservice.auth.mapper.AuthenticationMapper;
+import com.test.userauthservice.auth.security.CustomUserDetails;
 import com.test.userauthservice.auth.service.IAuthentication;
 import com.test.userauthservice.common.dto.ApiResponse;
 import com.test.userauthservice.common.exception.custom_exception.PasswordMismatchException;
@@ -17,6 +18,8 @@ import com.test.userauthservice.user.entity.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +69,21 @@ public class AuthenticationServiceImpl implements IAuthentication {
 
     @Override
     public ApiResponse<AuthenticationResponse> login(LoginRequest loginRequest) {
-        return null;
+        Authentication authentication =  authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.email(),
+                        loginRequest.password()
+                ));
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        Users user = customUserDetails != null ? customUserDetails.getUser() : null;
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        AuthenticationResponse response = buildAuthenticationResponse(user, accessToken, refreshToken);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .data(response)
+                .message("Login successful.")
+                .success(true)
+                .build();
     }
 
     private AuthenticationResponse buildAuthenticationResponse(Users savedUser, String accessToken, String refreshToken) {

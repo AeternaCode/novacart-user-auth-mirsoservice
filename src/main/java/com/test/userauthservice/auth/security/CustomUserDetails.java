@@ -1,6 +1,7 @@
 package com.test.userauthservice.auth.security;
 
 import com.test.userauthservice.user.entity.Users;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-
+@Data
 public class CustomUserDetails implements UserDetails {
 
     private final Users user;
