@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtServiceImpl jwtServiceImpl;
@@ -35,6 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 2. Check if the header is present and starts with "Bearer "
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.info("No valid Authorization header found for request: {}", request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
@@ -61,7 +65,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // 7. Store authenticated user
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                log.info("Authentication Success");
             }
+            log.info("Security Context : " + SecurityContextHolder.getContext().getAuthentication());
         }
         // 8. Continue request
         filterChain.doFilter(request, response);
