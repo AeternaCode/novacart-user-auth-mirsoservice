@@ -3,6 +3,7 @@ package com.test.userauthservice.auth.service.impl;
 import com.test.userauthservice.auth.dto.request.LoginRequest;
 import com.test.userauthservice.auth.dto.request.RegisterRequest;
 import com.test.userauthservice.auth.dto.response.AuthenticationResponse;
+import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
 import com.test.userauthservice.auth.mapper.AuthenticationMapper;
 import com.test.userauthservice.auth.security.CustomUserDetails;
 import com.test.userauthservice.auth.service.IAuthentication;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -95,5 +97,22 @@ public class AuthenticationServiceImpl implements IAuthentication {
                 jwtService.getTokenExpiry(refreshToken),
                 AuthenticationMapper.toUserSummary(savedUser)
         );
+    }
+
+    @Override
+    public ApiResponse<UserSummaryResponse> getCurrentUser() {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails customUserDetails = authentication !=null ?(CustomUserDetails) authentication.getPrincipal() : null;
+
+        Users user = customUserDetails != null ? customUserDetails.getUser() : null;
+
+        return ApiResponse.<UserSummaryResponse>builder()
+                .success(true)
+                .message("Current user fetched successfully.")
+                .data(AuthenticationMapper.toUserSummary(user))
+                .build();
     }
 }
