@@ -10,6 +10,7 @@ import com.test.userauthservice.auth.mapper.AuthenticationMapper;
 import com.test.userauthservice.auth.security.CustomUserDetails;
 import com.test.userauthservice.auth.service.IAuthentication;
 import com.test.userauthservice.common.dto.ApiResponse;
+import com.test.userauthservice.common.exception.custom_exception.InvalidTokenException;
 import com.test.userauthservice.common.exception.custom_exception.PasswordMismatchException;
 import com.test.userauthservice.common.exception.custom_exception.ResourceNotFoundException;
 import com.test.userauthservice.common.internalUserService.impl.InternalUserServiceImpl;
@@ -121,6 +122,11 @@ public class AuthenticationServiceImpl implements IAuthentication {
 
     @Override
     public ApiResponse<AuthenticationResponse> refreshToken(RefreshTokenRequest request) {
+        // 0. Verify token signature
+        if(!jwtService.isRefreshTokenValid(request.refreshToken())){
+            throw new InvalidTokenException("Invalid refresh token","REFRESH_TOKEN_INVALID");
+        }
+
         // 1. Verify refresh token
         RefreshToken oldRefreshToken = refreshTokenService.verifyRefreshToken(request.refreshToken());
 
