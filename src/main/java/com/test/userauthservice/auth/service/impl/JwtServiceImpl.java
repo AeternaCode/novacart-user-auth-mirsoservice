@@ -43,16 +43,14 @@ public class JwtServiceImpl implements IJwt {
     }
 
     @Override
-    public boolean isAccessTokenValid(String token, UserDetails user) {
+    public boolean isAccessTokenValid(String token) {
         return extractTokenType(token) == TokenType.ACCESS &&
-                extractUsername(token).equals(user.getUsername()) &&
                 !isTokenExpired(token);
     }
 
     @Override
-    public boolean isRefreshTokenValid(String token, UserDetails user) {
+    public boolean isRefreshTokenValid(String token) {
         return extractTokenType(token) == TokenType.REFRESH &&
-                extractUsername(token).equals(user.getUsername()) &&
                 !isTokenExpired(token);
     }
 

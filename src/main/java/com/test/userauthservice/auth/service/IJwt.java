@@ -13,9 +13,9 @@ public interface IJwt {
 
     String extractUsername(String token);
 
-    boolean isAccessTokenValid(String token, UserDetails user);
+    boolean isAccessTokenValid(String token);
 
-    boolean isRefreshTokenValid(String token, UserDetails user);
+    boolean isRefreshTokenValid(String token);
 
     TokenType extractTokenType(String token);
 
