@@ -4,6 +4,7 @@ import com.test.userauthservice.auth.dto.request.LoginRequest;
 import com.test.userauthservice.auth.dto.request.RegisterRequest;
 import com.test.userauthservice.auth.dto.response.AuthenticationResponse;
 import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
+import com.test.userauthservice.auth.entity.RefreshToken;
 import com.test.userauthservice.auth.mapper.AuthenticationMapper;
 import com.test.userauthservice.auth.security.CustomUserDetails;
 import com.test.userauthservice.auth.service.IAuthentication;
@@ -36,6 +37,7 @@ public class AuthenticationServiceImpl implements IAuthentication {
     private final PasswordEncoder passwordEncoder;
     private final JwtServiceImpl jwtService;
     private final IRoles roleRepository;
+    private final RefreshTokenServiceImpl refreshTokenService;
     private static final String TOKEN_TYPE = "Bearer";
 
     @Override
@@ -60,10 +62,10 @@ public class AuthenticationServiceImpl implements IAuthentication {
 
         String accessToken = jwtService.generateAccessToken(savedUser);
 
-        String refreshToken = jwtService.generateRefreshToken(savedUser);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser);
 
         return ApiResponse.<AuthenticationResponse>builder()
-                .data(buildAuthenticationResponse(savedUser, accessToken, refreshToken))
+                .data(buildAuthenticationResponse(savedUser, accessToken, refreshToken.getToken()))
                 .message("User registered successfully.")
                 .success(true)
                 .build();
@@ -79,8 +81,8 @@ public class AuthenticationServiceImpl implements IAuthentication {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         Users user = customUserDetails != null ? customUserDetails.getUser() : null;
         String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
-        AuthenticationResponse response = buildAuthenticationResponse(user, accessToken, refreshToken);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+        AuthenticationResponse response = buildAuthenticationResponse(user, accessToken, refreshToken.getToken());
         return ApiResponse.<AuthenticationResponse>builder()
                 .data(response)
                 .message("Login successful.")
