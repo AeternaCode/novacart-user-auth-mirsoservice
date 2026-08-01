@@ -1,5 +1,6 @@
 package com.test.userauthservice.user.entity;
 
+import com.test.userauthservice.common.entity.AuditableEntity;
 import com.test.userauthservice.common.entity.Roles;
 import com.test.userauthservice.common.utils.ENUMS.UserStatus;
 import jakarta.persistence.*;
@@ -12,7 +13,7 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class Users extends Roles.AuditableEntity {
+public class Users extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
