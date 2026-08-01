@@ -11,8 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 public class Users extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

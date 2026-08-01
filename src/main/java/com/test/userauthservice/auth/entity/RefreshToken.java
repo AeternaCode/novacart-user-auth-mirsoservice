@@ -5,6 +5,7 @@ import com.test.userauthservice.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class RefreshToken extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,8 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 public class Address extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
