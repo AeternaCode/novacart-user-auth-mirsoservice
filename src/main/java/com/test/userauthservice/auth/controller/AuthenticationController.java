@@ -1,5 +1,6 @@
 package com.test.userauthservice.auth.controller;
 
+import com.test.userauthservice.auth.dto.request.RefreshTokenRequest;
 import com.test.userauthservice.auth.dto.response.AuthenticationResponse;
 import com.test.userauthservice.auth.dto.request.LoginRequest;
 import com.test.userauthservice.auth.dto.request.RegisterRequest;
@@ -31,6 +32,18 @@ public class AuthenticationController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserSummaryResponse>> getCurrentUser() {
         return ResponseEntity.ok(authenticationService.getCurrentUser());
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<ApiResponse<AuthenticationResponse>>
+    refreshToken(
+            @Valid
+            @RequestBody
+            RefreshTokenRequest request){
+
+        return ResponseEntity.ok(
+                authenticationService.refreshToken(request)
+        );
     }
 
 }

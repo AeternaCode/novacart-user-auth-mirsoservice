@@ -9,4 +9,6 @@ public interface IRefreshToken {
     RefreshToken verifyRefreshToken(String token);
 
     void revokeRefreshToken(String token);
+
+    RefreshToken rotateRefreshToken(RefreshToken oldRefreshToken);
 }

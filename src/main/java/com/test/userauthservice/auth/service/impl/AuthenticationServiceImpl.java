@@ -1,6 +1,7 @@
 package com.test.userauthservice.auth.service.impl;
 
 import com.test.userauthservice.auth.dto.request.LoginRequest;
+import com.test.userauthservice.auth.dto.request.RefreshTokenRequest;
 import com.test.userauthservice.auth.dto.request.RegisterRequest;
 import com.test.userauthservice.auth.dto.response.AuthenticationResponse;
 import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
@@ -115,6 +116,34 @@ public class AuthenticationServiceImpl implements IAuthentication {
                 .success(true)
                 .message("Current user fetched successfully.")
                 .data(AuthenticationMapper.toUserSummary(user))
+                .build();
+    }
+
+    @Override
+    public ApiResponse<AuthenticationResponse> refreshToken(RefreshTokenRequest request) {
+        // 1. Verify refresh token
+        RefreshToken oldRefreshToken = refreshTokenService.verifyRefreshToken(request.refreshToken());
+
+        // 2. Rotate refresh token
+        RefreshToken newRefreshToken = refreshTokenService.rotateRefreshToken(oldRefreshToken);
+
+        // 3. Get user
+        Users user = newRefreshToken.getUser();
+
+        // 4. Generate new access token
+        String accessToken = jwtService.generateAccessToken(user);
+
+        // 5. Build response
+        AuthenticationResponse response = buildAuthenticationResponse(
+                        user,
+                        accessToken,
+                        newRefreshToken.getToken()
+                );
+
+        return ApiResponse.<AuthenticationResponse>builder()
+                .success(true)
+                .message("Access token refreshed successfully.")
+                .data(response)
                 .build();
     }
 }

@@ -35,7 +35,4 @@ public class RefreshToken extends AuditableEntity {
     @Builder.Default
     private boolean revoked = false;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean expired = false;
 }

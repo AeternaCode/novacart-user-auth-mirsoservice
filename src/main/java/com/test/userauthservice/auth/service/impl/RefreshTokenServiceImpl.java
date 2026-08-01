@@ -7,7 +7,7 @@ import com.test.userauthservice.common.exception.custom_exception.ResourceNotFou
 import com.test.userauthservice.user.entity.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
@@ -22,16 +22,15 @@ public class RefreshTokenServiceImpl implements IRefreshToken {
         RefreshToken refreshTokenEntity = RefreshToken.builder()
                 .token(refreshToken)
                 .user(user)
-                .expiresAt(LocalDateTime.from(jwtService.getTokenExpiry(refreshToken)))
+                .expiresAt(jwtService.getTokenExpiry(refreshToken).atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .revoked(false)
-                .expired(false)
                 .build();
         return refreshTokenRepository.save(refreshTokenEntity);
     }
 
     @Override
     public RefreshToken verifyRefreshToken(String token) {
-        RefreshToken refreshToken = refreshTokenRepository.findByTokenAndDeletedAtIsNullAndRevokedIsFalseAndExpiredIsFalse(token)
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenAndDeletedAtIsNullAndRevokedIsFalse(token)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Refresh token is invalid.",
                         "REFRESH_TOKEN_NOT_FOUND")
@@ -46,4 +45,12 @@ public class RefreshTokenServiceImpl implements IRefreshToken {
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
     }
+
+    @Override
+    public RefreshToken rotateRefreshToken(RefreshToken oldRefreshToken) {
+           revokeRefreshToken(oldRefreshToken.getToken());
+            return createRefreshToken(oldRefreshToken.getUser());
+    }
+
+
 }
