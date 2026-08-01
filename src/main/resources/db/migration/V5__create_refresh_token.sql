@@ -9,8 +9,6 @@ CREATE TABLE refresh_tokens (
 
                                 revoked BOOLEAN NOT NULL DEFAULT FALSE,
 
-                                expired BOOLEAN NOT NULL DEFAULT FALSE,
-
                                 created_at DATETIME NOT NULL,
 
                                 updated_at DATETIME NOT NULL,
