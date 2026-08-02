@@ -1,12 +1,13 @@
 package com.test.userauthservice;
 
-import com.test.userauthservice.config.PaginationProperties;
+import com.test.userauthservice.common.config.JwtProperties;
+import com.test.userauthservice.common.config.PaginationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties(PaginationProperties.class)
+@EnableConfigurationProperties({PaginationProperties.class, JwtProperties.class})
 public class UserAuthServiceApplication {
 
     public static void main(String[] args) {
