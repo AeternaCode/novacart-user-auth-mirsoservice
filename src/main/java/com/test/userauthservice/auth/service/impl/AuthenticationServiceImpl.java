@@ -25,6 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -41,6 +42,7 @@ public class AuthenticationServiceImpl implements IAuthentication {
     private static final String TOKEN_TYPE = "Bearer";
 
     @Override
+    @Transactional
     public ApiResponse<AuthenticationResponse> register(RegisterRequest registerRequest) {
         log.info("Register request: {}", registerRequest);
         if (!registerRequest.password().equals(registerRequest.confirmPassword())) {
@@ -72,6 +74,7 @@ public class AuthenticationServiceImpl implements IAuthentication {
     }
 
     @Override
+    @Transactional
     public ApiResponse<AuthenticationResponse> login(LoginRequest loginRequest) {
         Authentication authentication =  authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -102,6 +105,7 @@ public class AuthenticationServiceImpl implements IAuthentication {
     }
 
     @Override
+    @Transactional
     public ApiResponse<AuthenticationResponse> refreshToken(RefreshTokenRequest request) {
         // 0. Verify token signature
         if(!jwtService.isRefreshTokenValid(request.refreshToken())){
@@ -135,6 +139,7 @@ public class AuthenticationServiceImpl implements IAuthentication {
     }
 
     @Override
+    @Transactional
     public ApiResponse<Void> logout(RefreshTokenRequest request) {
         // 1. Verify refresh token
         if(!jwtService.isRefreshTokenValid(request.refreshToken())){
