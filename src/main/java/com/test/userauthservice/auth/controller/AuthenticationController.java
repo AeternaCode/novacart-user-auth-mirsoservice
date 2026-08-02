@@ -35,15 +35,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<ApiResponse<AuthenticationResponse>>
-    refreshToken(
-            @Valid
-            @RequestBody
-            RefreshTokenRequest request){
-
-        return ResponseEntity.ok(
-                authenticationService.refreshToken(request)
-        );
+    public ResponseEntity<ApiResponse<AuthenticationResponse>> refreshToken(@Valid @RequestBody RefreshTokenRequest request){
+        return ResponseEntity.ok(authenticationService.refreshToken(request));
     }
 
 }
