@@ -12,4 +12,5 @@ public interface IAuthentication {
     ApiResponse<AuthenticationResponse> login(LoginRequest loginRequest);
     ApiResponse<UserSummaryResponse> getCurrentUser();
     ApiResponse<AuthenticationResponse> refreshToken(RefreshTokenRequest request);
+    ApiResponse<Void> logout(RefreshTokenRequest request);
 }

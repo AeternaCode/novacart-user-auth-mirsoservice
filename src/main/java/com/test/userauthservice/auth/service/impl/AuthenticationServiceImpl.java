@@ -152,4 +152,19 @@ public class AuthenticationServiceImpl implements IAuthentication {
                 .data(response)
                 .build();
     }
+
+    @Override
+    public ApiResponse<Void> logout(RefreshTokenRequest request) {
+        // 1. Verify refresh token
+        if(!jwtService.isRefreshTokenValid(request.refreshToken())){
+            throw new InvalidTokenException("Invalid refresh token","REFRESH_TOKEN_INVALID");
+        }
+        // revoke the refresh token
+        refreshTokenService.revokeRefreshToken(request.refreshToken());
+
+        return ApiResponse.<Void>builder()
+                .success(true)
+                .message("Logged out successfully.")
+                .build();
+    }
 }
