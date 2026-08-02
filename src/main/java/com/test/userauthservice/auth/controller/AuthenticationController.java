@@ -4,7 +4,6 @@ import com.test.userauthservice.auth.dto.request.RefreshTokenRequest;
 import com.test.userauthservice.auth.dto.response.AuthenticationResponse;
 import com.test.userauthservice.auth.dto.request.LoginRequest;
 import com.test.userauthservice.auth.dto.request.RegisterRequest;
-import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
 import com.test.userauthservice.auth.service.impl.AuthenticationServiceImpl;
 import com.test.userauthservice.common.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -27,11 +26,6 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthenticationResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authenticationService.login(loginRequest));
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserSummaryResponse>> getCurrentUser() {
-        return ResponseEntity.ok(authenticationService.getCurrentUser());
     }
 
     @PostMapping("/refresh-token")
