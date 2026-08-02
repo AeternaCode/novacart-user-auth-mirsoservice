@@ -4,6 +4,7 @@ import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
 import com.test.userauthservice.auth.mapper.AuthenticationMapper;
 import com.test.userauthservice.common.config.PaginationProperties;
 import com.test.userauthservice.common.dto.ApiResponse;
+import com.test.userauthservice.common.utils.ENUMS.UserStatus;
 import com.test.userauthservice.common.utils.SecurityUtils;
 import com.test.userauthservice.user.dto.request.user.SearchUserRequestDTO;
 import com.test.userauthservice.user.dto.request.user.UpdateUserRequestDTO;
@@ -102,6 +103,7 @@ public class UserServiceImpl implements IUsers {
         Users user = verifyResource.verifyOrGetUserById(userId);
         log.info("Soft Deleting user with id {}", userId);
         user.setDeletedAt(LocalDateTime.now());
+        user.setStatus(UserStatus.INACTIVE);
         usersRepo.save(user);
         return ApiResponse.<Long>builder()
                 .success(true)
@@ -116,6 +118,7 @@ public class UserServiceImpl implements IUsers {
         Users user = verifyResource.verifyOrGetDeletedUserById(userId);
         log.info("Restore user with id {}", userId);
         user.setDeletedAt(null);
+        user.setStatus(UserStatus.ACTIVE);
         usersRepo.save(user);
         return ApiResponse.<Long>builder()
                 .success(true)
