@@ -1,5 +1,6 @@
 package com.test.userauthservice.user.service;
 
+import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
 import com.test.userauthservice.common.dto.ApiResponse;
 import com.test.userauthservice.user.dto.request.user.SearchUserRequestDTO;
 import com.test.userauthservice.user.dto.request.user.UpdateUserRequestDTO;
@@ -18,4 +19,7 @@ public interface IUsers {
     ApiResponse<PageResponse<GetDeletedUserResponseDTO>> getDeletedUsers(SearchUserRequestDTO searchUserRequestDTO,int pageNumber, int size, UserSortField sortBy, SortDirection sortDirection);
     ApiResponse<GetDeletedUserResponseDTO> getDeletedUserById(Long userId);
     ApiResponse<GetUserResponseDTO> updateUser(Long userId, UpdateUserRequestDTO updateUserRequestDTO);
+    ApiResponse<UserSummaryResponse> getCurrentUser();
+    ApiResponse<GetUserResponseDTO> UpdateCurrentUser(UpdateUserRequestDTO updateUserRequestDTO);
+    ApiResponse<Long> deleteUser();
 }
