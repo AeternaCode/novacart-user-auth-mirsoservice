@@ -1,13 +1,15 @@
 package com.test.userauthservice.auth.service.impl;
 
 import com.test.userauthservice.auth.dto.request.LoginRequest;
+import com.test.userauthservice.auth.dto.request.RefreshTokenRequest;
 import com.test.userauthservice.auth.dto.request.RegisterRequest;
 import com.test.userauthservice.auth.dto.response.AuthenticationResponse;
-import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
+import com.test.userauthservice.auth.entity.RefreshToken;
 import com.test.userauthservice.auth.mapper.AuthenticationMapper;
 import com.test.userauthservice.auth.security.CustomUserDetails;
 import com.test.userauthservice.auth.service.IAuthentication;
 import com.test.userauthservice.common.dto.ApiResponse;
+import com.test.userauthservice.common.exception.custom_exception.InvalidTokenException;
 import com.test.userauthservice.common.exception.custom_exception.PasswordMismatchException;
 import com.test.userauthservice.common.exception.custom_exception.ResourceNotFoundException;
 import com.test.userauthservice.common.internalUserService.impl.InternalUserServiceImpl;
@@ -21,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class AuthenticationServiceImpl implements IAuthentication {
     private final PasswordEncoder passwordEncoder;
     private final JwtServiceImpl jwtService;
     private final IRoles roleRepository;
+    private final RefreshTokenServiceImpl refreshTokenService;
     private static final String TOKEN_TYPE = "Bearer";
 
     @Override
@@ -60,10 +62,10 @@ public class AuthenticationServiceImpl implements IAuthentication {
 
         String accessToken = jwtService.generateAccessToken(savedUser);
 
-        String refreshToken = jwtService.generateRefreshToken(savedUser);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser);
 
         return ApiResponse.<AuthenticationResponse>builder()
-                .data(buildAuthenticationResponse(savedUser, accessToken, refreshToken))
+                .data(buildAuthenticationResponse(savedUser, accessToken, refreshToken.getToken()))
                 .message("User registered successfully.")
                 .success(true)
                 .build();
@@ -79,8 +81,8 @@ public class AuthenticationServiceImpl implements IAuthentication {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         Users user = customUserDetails != null ? customUserDetails.getUser() : null;
         String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
-        AuthenticationResponse response = buildAuthenticationResponse(user, accessToken, refreshToken);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+        AuthenticationResponse response = buildAuthenticationResponse(user, accessToken, refreshToken.getToken());
         return ApiResponse.<AuthenticationResponse>builder()
                 .data(response)
                 .message("Login successful.")
@@ -100,19 +102,50 @@ public class AuthenticationServiceImpl implements IAuthentication {
     }
 
     @Override
-    public ApiResponse<UserSummaryResponse> getCurrentUser() {
+    public ApiResponse<AuthenticationResponse> refreshToken(RefreshTokenRequest request) {
+        // 0. Verify token signature
+        if(!jwtService.isRefreshTokenValid(request.refreshToken())){
+            throw new InvalidTokenException("Invalid refresh token","REFRESH_TOKEN_INVALID");
+        }
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+        // 1. Verify refresh token
+        RefreshToken oldRefreshToken = refreshTokenService.verifyRefreshToken(request.refreshToken());
 
-        CustomUserDetails customUserDetails = authentication !=null ?(CustomUserDetails) authentication.getPrincipal() : null;
+        // 2. Rotate refresh token
+        RefreshToken newRefreshToken = refreshTokenService.rotateRefreshToken(oldRefreshToken);
 
-        Users user = customUserDetails != null ? customUserDetails.getUser() : null;
+        // 3. Get user
+        Users user = newRefreshToken.getUser();
 
-        return ApiResponse.<UserSummaryResponse>builder()
+        // 4. Generate new access token
+        String accessToken = jwtService.generateAccessToken(user);
+
+        // 5. Build response
+        AuthenticationResponse response = buildAuthenticationResponse(
+                        user,
+                        accessToken,
+                        newRefreshToken.getToken()
+                );
+
+        return ApiResponse.<AuthenticationResponse>builder()
                 .success(true)
-                .message("Current user fetched successfully.")
-                .data(AuthenticationMapper.toUserSummary(user))
+                .message("Access token refreshed successfully.")
+                .data(response)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<Void> logout(RefreshTokenRequest request) {
+        // 1. Verify refresh token
+        if(!jwtService.isRefreshTokenValid(request.refreshToken())){
+            throw new InvalidTokenException("Invalid refresh token","REFRESH_TOKEN_INVALID");
+        }
+        // revoke the refresh token
+        refreshTokenService.revokeRefreshToken(request.refreshToken());
+
+        return ApiResponse.<Void>builder()
+                .success(true)
+                .message("Logged out successfully.")
                 .build();
     }
 }

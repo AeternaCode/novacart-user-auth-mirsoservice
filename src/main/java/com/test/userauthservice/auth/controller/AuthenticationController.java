@@ -1,9 +1,9 @@
 package com.test.userauthservice.auth.controller;
 
+import com.test.userauthservice.auth.dto.request.RefreshTokenRequest;
 import com.test.userauthservice.auth.dto.response.AuthenticationResponse;
 import com.test.userauthservice.auth.dto.request.LoginRequest;
 import com.test.userauthservice.auth.dto.request.RegisterRequest;
-import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
 import com.test.userauthservice.auth.service.impl.AuthenticationServiceImpl;
 import com.test.userauthservice.common.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -28,9 +28,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.login(loginRequest));
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserSummaryResponse>> getCurrentUser() {
-        return ResponseEntity.ok(authenticationService.getCurrentUser());
+    @PostMapping("/refresh-token")
+    public ResponseEntity<ApiResponse<AuthenticationResponse>> refreshToken(@Valid @RequestBody RefreshTokenRequest request){
+        return ResponseEntity.ok(authenticationService.refreshToken(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout( @Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.ok(authenticationService.logout(refreshTokenRequest));
     }
 
 }
