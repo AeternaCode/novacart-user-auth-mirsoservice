@@ -1,5 +1,6 @@
 package com.test.userauthservice.user.controller;
 
+import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
 import com.test.userauthservice.common.dto.ApiResponse;
 import com.test.userauthservice.user.dto.request.user.SearchUserRequestDTO;
 import com.test.userauthservice.user.dto.request.user.UpdateUserRequestDTO;
@@ -126,5 +127,20 @@ public class UserController {
             @Valid @RequestBody UpdateUserRequestDTO updateUserRequestDTO
     ) {
         return ResponseEntity.ok(usersService.updateUser(userId, updateUserRequestDTO));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserSummaryResponse>> getCurrentUser() {
+        return ResponseEntity.ok(usersService.getCurrentUser());
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<ApiResponse<GetUserResponseDTO>> updateCurrentUser(@Valid @RequestBody UpdateUserRequestDTO updateUserRequestDTO) {
+        return ResponseEntity.ok(usersService.UpdateCurrentUser(updateUserRequestDTO));
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<ApiResponse<Long>> deleteUser() {
+        return ResponseEntity.ok(usersService.deleteUser());
     }
 }

@@ -1,7 +1,10 @@
 package com.test.userauthservice.user.service.impl;
 
+import com.test.userauthservice.auth.dto.response.UserSummaryResponse;
+import com.test.userauthservice.auth.mapper.AuthenticationMapper;
 import com.test.userauthservice.common.config.PaginationProperties;
 import com.test.userauthservice.common.dto.ApiResponse;
+import com.test.userauthservice.common.utils.SecurityUtils;
 import com.test.userauthservice.user.dto.request.user.SearchUserRequestDTO;
 import com.test.userauthservice.user.dto.request.user.UpdateUserRequestDTO;
 import com.test.userauthservice.common.dto.PageResponse;
@@ -35,6 +38,7 @@ public class UserServiceImpl implements IUsers {
     private final UserRepo usersRepo;
     private final VerifyResource verifyResource;
     private final PaginationProperties paginationProperties;
+    private final SecurityUtils securityUtils;
 
     @Override
     @Transactional(readOnly = true)
@@ -178,4 +182,33 @@ public class UserServiceImpl implements IUsers {
                 .data(UserMapper.toGetUserResponseDTO(user))
                 .build();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ApiResponse<UserSummaryResponse> getCurrentUser() {
+        Users user = securityUtils.getAuthenticatedUser();
+        log.info("Current user with id {}", user.getId());
+        return ApiResponse.<UserSummaryResponse>builder()
+                .success(true)
+                .message("Current user fetched successfully.")
+                .data(AuthenticationMapper.toUserSummary(user))
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public ApiResponse<GetUserResponseDTO> UpdateCurrentUser(UpdateUserRequestDTO updateUserRequestDTO) {
+       Users getCurrentUser = securityUtils.getAuthenticatedUser();
+       log.info("Updating user with id {}", getCurrentUser.getId());
+        return updateUser(getCurrentUser.getId(), updateUserRequestDTO);
+    }
+
+    @Override
+    @Transactional
+    public ApiResponse<Long> deleteUser() {
+        Users user = securityUtils.getAuthenticatedUser();
+        log.info("Deleting user with id {}", user.getId());
+        return softRemoveUserById(user.getId());
+    }
+
 }
