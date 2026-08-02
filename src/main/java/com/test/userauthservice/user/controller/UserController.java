@@ -17,6 +17,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,7 @@ public class UserController {
             description = "Returns a paginated list of users with sorting support"
     )
     @GetMapping("/get-all-users")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<PageResponse<GetUserResponseDTO>>> getAllUsers(
             @ModelAttribute SearchUserRequestDTO searchUserRequestDTO,
             @RequestParam(defaultValue = "0") @PositiveOrZero(message = "Page number cannot be negative") int pageNumber,
@@ -52,6 +54,7 @@ public class UserController {
             description = "Returns a single user using its unique identifier"
     )
     @GetMapping("/get-user-by-id/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<GetUserResponseDTO>> getUserById(
             @PathVariable @Positive(message = "User ID must be greater than 0") Long userId
     ){
@@ -63,6 +66,7 @@ public class UserController {
             description = "Permanently deletes a user using user ID"
     )
     @DeleteMapping("/remove-user/{userId}/permanent")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Long>> removeUserById(
             @PathVariable @Positive(message = "User ID must be greater than 0") Long userId
     ) {
@@ -74,6 +78,7 @@ public class UserController {
             description = "Soft deletes a user using user ID"
     )
     @DeleteMapping("/remove-user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Long>> softRemoveUserById(
             @PathVariable @Positive(message = "User ID must be greater than 0") Long userId
     ) {
@@ -85,6 +90,7 @@ public class UserController {
             description = "Restores a soft deleted user using user ID"
     )
     @PatchMapping("/restore-user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Long>> restoreUserById(
             @PathVariable @Positive(message = "User ID must be greater than 0") Long userId
     ) {
@@ -96,6 +102,7 @@ public class UserController {
             description = "Returns a paginated list of deleted users with sorting support"
     )
     @GetMapping("/get-deleted-users")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<PageResponse<GetDeletedUserResponseDTO>>> getDeletedUsers(
             @ModelAttribute SearchUserRequestDTO searchUserRequestDTO,
             @RequestParam(defaultValue = "0") @PositiveOrZero(message = "Page number cannot be negative") int pageNumber,
@@ -111,6 +118,7 @@ public class UserController {
             description = "Returns a single deleted user using its unique identifier"
     )
     @GetMapping("/get-deleted-user-by-id/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<GetDeletedUserResponseDTO>> getDeletedUserById(
             @PathVariable @Positive(message = "User ID must be greater than 0") Long userId
     ) {
@@ -122,6 +130,7 @@ public class UserController {
             description = "Updates an existing user using the user ID"
     )
     @PatchMapping("/update-user-by-id/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<GetUserResponseDTO>> updateUser(
             @PathVariable @Positive(message = "User ID must be greater than 0") Long userId,
             @Valid @RequestBody UpdateUserRequestDTO updateUserRequestDTO
