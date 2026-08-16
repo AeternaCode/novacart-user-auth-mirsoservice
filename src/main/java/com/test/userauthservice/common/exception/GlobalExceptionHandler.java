@@ -1,9 +1,6 @@
 package com.test.userauthservice.common.exception;
 
-import com.test.userauthservice.common.exception.custom_exception.DuplicateResourceException;
-import com.test.userauthservice.common.exception.custom_exception.InvalidOperationException;
-import com.test.userauthservice.common.exception.custom_exception.PasswordMismatchException;
-import com.test.userauthservice.common.exception.custom_exception.ResourceNotFoundException;
+import com.test.userauthservice.common.exception.custom_exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.test.userauthservice.common.exception.dto.ErrorResponse;
@@ -122,6 +119,25 @@ public class GlobalExceptionHandler {
         log.error("Validation failed", ex);
 
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTokenException(
+            InvalidTokenException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.UNAUTHORIZED)
+                .error(ex.getErrorMsg())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        log.error("Invalid token", ex);
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(error);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

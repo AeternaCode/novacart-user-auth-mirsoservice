@@ -2,6 +2,7 @@ package com.test.userauthservice.auth.service.impl;
 
 import com.test.userauthservice.auth.service.IJwt;
 import com.test.userauthservice.common.config.JwtProperties;
+import com.test.userauthservice.common.utils.ENUMS.TokenType;
 import com.test.userauthservice.user.entity.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -28,12 +29,12 @@ public class JwtServiceImpl implements IJwt {
 
     @Override
     public String generateAccessToken(Users user) {
-        return generateToken(user, jwtProperties.getAccessTokenExpiration());
+        return generateToken(user, jwtProperties.getAccessTokenExpiration(), TokenType.ACCESS);
     }
 
     @Override
     public String generateRefreshToken(Users user) {
-        return generateToken(user, jwtProperties.getRefreshTokenExpiration());
+        return generateToken(user, jwtProperties.getRefreshTokenExpiration(), TokenType.REFRESH);
     }
 
     @Override
@@ -42,17 +43,34 @@ public class JwtServiceImpl implements IJwt {
     }
 
     @Override
-    public boolean isTokenValid(String token, UserDetails user) {
-        return extractUsername(token).equals(user.getUsername())
-                && !isTokenExpired(token);
+    public boolean isAccessTokenValid(String token) {
+        return extractTokenType(token) == TokenType.ACCESS &&
+                !isTokenExpired(token);
     }
 
-    private String generateToken(Users user, long expiration) {
+    @Override
+    public boolean isRefreshTokenValid(String token) {
+        return extractTokenType(token) == TokenType.REFRESH &&
+                !isTokenExpired(token);
+    }
+
+    @Override
+    public TokenType extractTokenType(String token) {
+        String tokenType = extractClaim(
+                token,
+                claims -> claims.get("tokenType", String.class)
+        );
+
+        return TokenType.valueOf(tokenType);
+    }
+
+    private String generateToken(Users user, long expiration, TokenType tokenType) {
 
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("userId", user.getId());
         claims.put("role", user.getRole().getName().name());
+        claims.put("tokenType", tokenType.name());
 
         return Jwts.builder()
                 .claims(claims)

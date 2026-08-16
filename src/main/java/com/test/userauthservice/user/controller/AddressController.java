@@ -3,6 +3,7 @@ package com.test.userauthservice.user.controller;
 import com.test.userauthservice.user.service.impl.AddressesServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.test.userauthservice.common.dto.ApiResponse;
 import com.test.userauthservice.user.dto.request.address.CreateAddressRequestDTO;
@@ -33,6 +34,7 @@ public class AddressController {
             description = "Creates a new address for a user"
     )
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public ResponseEntity<ApiResponse<GetAddressResponseDTO>> createAddress(
             @PathVariable
             @Positive(message = "User ID must be greater than 0")
@@ -49,6 +51,7 @@ public class AddressController {
             description = "Returns all addresses belonging to a user"
     )
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public ResponseEntity<ApiResponse<List<GetAddressResponseDTO>>> getAllAddresses(
             @PathVariable
             @Positive(message = "User ID must be greater than 0")
@@ -62,6 +65,7 @@ public class AddressController {
             description = "Returns a specific address belonging to a user"
     )
     @GetMapping("/{addressId}")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public ResponseEntity<ApiResponse<GetAddressResponseDTO>> getAddressById(
             @PathVariable
             @Positive(message = "User ID must be greater than 0")
@@ -79,6 +83,7 @@ public class AddressController {
             description = "Updates an existing address"
     )
     @PatchMapping("/{addressId}")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public ResponseEntity<ApiResponse<GetAddressResponseDTO>> updateAddress(
             @PathVariable
             @Positive(message = "User ID must be greater than 0")
@@ -99,6 +104,7 @@ public class AddressController {
             description = "Permanently deletes an address"
     )
     @DeleteMapping("/{addressId}")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public ResponseEntity<ApiResponse<Long>> deleteAddress(
             @PathVariable
             @Positive(message = "User ID must be greater than 0")

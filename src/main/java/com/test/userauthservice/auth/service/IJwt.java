@@ -1,5 +1,6 @@
 package com.test.userauthservice.auth.service;
 
+import com.test.userauthservice.common.utils.ENUMS.TokenType;
 import com.test.userauthservice.user.entity.Users;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,7 +13,11 @@ public interface IJwt {
 
     String extractUsername(String token);
 
-    boolean isTokenValid(String token, UserDetails user);
+    boolean isAccessTokenValid(String token);
+
+    boolean isRefreshTokenValid(String token);
+
+    TokenType extractTokenType(String token);
 
     Instant getTokenExpiry(String token);
 }
