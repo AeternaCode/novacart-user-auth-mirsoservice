@@ -20,9 +20,9 @@ public class AuthenticationMapper {
     public static UserSummaryResponse toUserSummary(Users user){
         return new UserSummaryResponse(
                 user.getId(),
-                user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
+                user.getEmail(),
                 user.getPhoneNumber(),
                 UserStatus.ACTIVE
         );
