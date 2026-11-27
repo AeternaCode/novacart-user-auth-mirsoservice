@@ -1960,16 +1960,6 @@ The following capabilities are not implemented in the current repository and wou
 
 ---
 
-## Screenshots
-
-Placeholder for Swagger UI screenshot:
-
-- Swagger UI overview
-- Authentication flow example
-- User management API responses
-
----
-
 ## Learning Outcomes
 
 This project demonstrates several core backend engineering concepts:
@@ -1982,36 +1972,6 @@ This project demonstrates several core backend engineering concepts:
 - Validation and global exception handling
 - Pagination, filtering, and sorting with Spring specifications
 - OpenAPI documentation and API discoverability
-
----
-
-## Resume Highlights
-
-- Built a secure Spring Boot authentication service with JWT access and refresh tokens.
-- Implemented role-based authorization and method-level security for protected endpoints.
-- Designed and exposed REST APIs for user lifecycle management and address CRUD operations.
-- Applied Flyway migrations for reproducible database schema evolution.
-- Integrated Springdoc OpenAPI for interactive API documentation.
-- Added centralized validation and exception handling for consistent API behavior.
-- Implemented soft-delete and restore flows for user lifecycle management.
-- Configured CI/CD automation with test, coverage, and SonarQube reporting.
-- Used Spring Data JPA specifications to support advanced filtering and pagination.
-- Structured the codebase with a layered architecture for maintainability and extensibility.
-
----
-
-## Interview Discussion Topics
-
-- How does JWT-based authentication work in a stateless Spring Boot API?
-- What is the difference between access tokens and refresh tokens?
-- How would you implement refresh token rotation securely?
-- How does Spring Security enforce authorization at the controller and method levels?
-- Why use Flyway for database migrations in production systems?
-- What are the benefits of soft delete versus hard delete?
-- How do Spring Data JPA specifications help with dynamic filtering?
-- How can global exception handling improve API consistency?
-- What is the role of OpenAPI/Swagger in backend service development?
-- How would you extend this service for OAuth2 or email verification?
 
 ---
 
